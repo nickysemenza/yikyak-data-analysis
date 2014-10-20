@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block title %} - Home{% endblock %}
+{% block extrahead %}
+
+
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+    <script>
+      var result = new Array();
+      var name;
+      function initialize() {
+        var myLatlng = new google.maps.LatLng('40.423705', '-86.921195');
+        var mapOptions = {
+          zoom: 14,
+          center: myLatlng
+        }
+        var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+        var infowindow = new google.maps.InfoWindow();
+        var marker;
+        var i = 0; 
+      //console.log(locations.drawings.length);
+        {% for eachYak in yaks_top %}
+
+          marker = new google.maps.Marker({
+          position: new google.maps.LatLng({{eachYak.get('latitude')}},{{eachYak.get('longitude')}}),
+          icon: "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|ff0000",
+          map: map,
+          title: "{{eachYak.get('likes')}} likes"
+        });
+        google.maps.event.addListener(marker, 'click', (function(marker, i) {
+          return function() {
+            var name = "{{eachYak.get('likes')}}";
+            infowindow.setContent("<p>{{eachYak.get('message')}} <br> {{eachYak.get('likes')}} likes <br> {{eachYak.get('time')}}</p> ");
+            infowindow.open(map, marker);
+          }
+        })(marker, i));
+      {% endfor %}
+
+
+      {% for eachYak in yaks_new %}
+
+          marker = new google.maps.Marker({
+          position: new google.maps.LatLng({{eachYak.get('latitude')}},{{eachYak.get('longitude')}}),
+          icon: "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|0000ff",
+          map: map,
+          title: "{{eachYak.get('likes')}} likes"
+        });
+        google.maps.event.addListener(marker, 'click', (function(marker, i) {
+          return function() {
+            var name = "{{eachYak.get('likes')}}";
+            infowindow.setContent("<p>{{eachYak.get('message')}} <br> {{eachYak.get('likes')}} likes <br> {{eachYak.get('time')}}</p> ");
+            infowindow.open(map, marker);
+          }
+        })(marker, i));
+      {% endfor %}
+
+
+      {% for eachYak in yaks_greatest %}
+
+          marker = new google.maps.Marker({
+          position: new google.maps.LatLng({{eachYak.get('latitude')}},{{eachYak.get('longitude')}}),
+          icon: "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FFD103",
+          map: map,
+          title: "{{eachYak.get('likes')}} likes"
+        });
+        google.maps.event.addListener(marker, 'click', (function(marker, i) {
+          return function() {
+            var name = "{{eachYak.get('likes')}}";
+            infowindow.setContent("<p>{{eachYak.get('message')}} <br> {{eachYak.get('likes')}} likes <br> {{eachYak.get('time')}}</p> ");
+            infowindow.open(map, marker);
+          }
+        })(marker, i));
+      {% endfor %}
+
+
+
+    }
+    google.maps.event.addDomListener(window, 'load', initialize);
+  </script>
+
+
+{% endblock %}
+{% block content %}
+
+
+    <div id="map-canvas"></div>
+
+<style>
+#map-canvas {
+  height: 100%; 
+  width: 100%; 
+  top: 0; 
+  left: 0; 
+  z-index: 0;
+  padding-top: 50px;
+  position:absolute;
+      -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+</style>
+{% endblock %}
