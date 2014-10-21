@@ -30,7 +30,7 @@
         });
         google.maps.event.addListener(marker, 'click', (function(marker, i) {
           return function() {
-            var name = "{{eachYak.get('likes')}}";
+            var name = "{{eachYak.get('hash')}}";
             infowindow.setContent("<p>{{eachYak.get('message')}} <br> {{eachYak.get('likes')}} likes <br> {{eachYak.get('time')}}</p> ");
             infowindow.open(map, marker);
           }
@@ -39,20 +39,19 @@
 
 
       {% for eachYak in yaks_new %}
-
-          marker = new google.maps.Marker({
+          marker2 = new google.maps.Marker({
           position: new google.maps.LatLng({{eachYak.get('latitude')}},{{eachYak.get('longitude')}}),
           icon: "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|0000ff",
           map: map,
           title: "{{eachYak.get('likes')}} likes"
         });
-        google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        google.maps.event.addListener(marker, 'click', (function(marker2, i) {
           return function() {
-            var name = "{{eachYak.get('likes')}}";
+            var name = "{{eachYak.get('hash')}}";
             infowindow.setContent("<p>{{eachYak.get('message')}} <br> {{eachYak.get('likes')}} likes <br> {{eachYak.get('time')}}</p> ");
-            infowindow.open(map, marker);
+            infowindow.open(map, marker2);
           }
-        })(marker, i));
+        })(marker2, i));
       {% endfor %}
 
 
@@ -62,20 +61,18 @@
           position: new google.maps.LatLng({{eachYak.get('latitude')}},{{eachYak.get('longitude')}}),
           icon: "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FFD103",
           map: map,
-          title: "{{eachYak.get('likes')}} likes"
+          title: "{{eachYak.get('likes')}} votes"
         });
         google.maps.event.addListener(marker, 'click', (function(marker, i) {
           return function() {
-            var name = "{{eachYak.get('likes')}}";
-            infowindow.setContent("<p>{{eachYak.get('message')}} <br> {{eachYak.get('likes')}} likes <br> {{eachYak.get('time')}}</p> ");
+            var name = "{{eachYak.get('hash')}}";
+            infowindow.setContent("<p>{{eachYak.get('message')}} <br> {{eachYak.get('likes')}} votes <br> {{eachYak.get('time')}}</p> ");
             infowindow.open(map, marker);
           }
         })(marker, i));
       {% endfor %}
 
-      {% for word in words %}
-      {{word}}
-      {% endfor %}
+  
 
 
 
@@ -90,21 +87,56 @@
 
     <div id="map-canvas"></div>
 
+    <div class="row">
+  <div class="col-md-6">
+    <h3>Hot Yaks</h3>
+    <table class="table table-condensed table-hover table-striped table-bordered">
+      <thead>
+        <tr>
+        <td>Message</td>
+        <td>Likes</td>
+      </tr>
+      </thead>
+      {% for eachYak in yaks_top %}
+      <tr>
+        <td>{{eachYak.get('message')}}</td>
+        <td>{{eachYak.get('likes')}}</td>
+      </tr>
+      {% endfor %}
+    </table>
+
+  </div>
+  <div class="col-md-6">
+
+  <h3>New Yaks</h3>
+    <table class="table table-condensed table-hover table-striped table-bordered">
+      <thead>
+        <tr>
+        <td>Message</td>
+        <td>Likes</td>
+        <td>id</td>
+      </tr>
+      </thead>
+      {% for eachYak in yaks_new %}
+      <tr>
+        <td>{{eachYak.get('message')}}</td>
+        <td>{{eachYak.get('likes')}}</td>
+        <td>{{eachYak.get('message_id')}}</td>
+      </tr>
+      {% endfor %}
+    </table>
+
+  </div>
+</div>
+
+
+
+
+
 <style>
 #map-canvas {
-  height: 100%; 
-  width: 100%; 
-  top: 0; 
-  left: 0; 
-  z-index: 0;
-  padding-top: 50px;
-  position:absolute;
-      -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+  width:100%;
+  height:700px;
 }
 </style>
 {% endblock %}

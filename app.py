@@ -2,6 +2,7 @@ import os
 import pyak as pk
 from flask import Flask, render_template, send_from_directory, session, request, redirect, url_for
 import json
+import operator
 # initialization
 app = Flask(__name__)
 app.config.update(
@@ -27,7 +28,15 @@ def map():
 		lat="40.42569479"
 	print(lat)
 	location = pk.Location(lat, lon)
-	testyakker = pk.Yakker(None, location, False)
+	#testyakker = pk.Yakker(None, location, False)
+	for x in range(0, 10):
+		testyakker = pk.Yakker(None, location, True)
+		# id = pk.Yakker.gen_id(testyakker)
+		# pk.Yakker.register_id_new(testyakker, id)
+		# test2 = pk.Yakker(id, location, False)
+		testyakker.downvote_yak("R/5445e3d3ef33a4d70d616f6b30d44")
+
+
 	#yaklist = testyakker.get_area_tops()
 	yaks_new = []
 	words=[]
@@ -43,7 +52,18 @@ def map():
 	data= {}
 	data['latitude']=lat
 	data['longitude']=lon
-	print json.dumps(words)
+	#print json.dumps(words)
+	wordcount = {}
+	for word in words:
+		try:
+			wordcount[word]+=1
+		except Exception, e:
+			wordcount[word]=1
+
+	# d_view = [ (v,k) for k,v in wordcount.iteritems() ]
+	# d_view.sort(reverse=False) # natively sort tuples by first element
+	# for v,k in d_view:
+	#     print "%s: %d" % (k,v)
 	return render_template('map.html',yaks_new=yaks_new,yaks_top=yaks_top,yaks_greatest=yaks_greatest,data=data,words=words)
 
 @app.route("/")

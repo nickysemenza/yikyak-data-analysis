@@ -6,6 +6,7 @@ import time
 import datetime
 import urllib
 import os
+import hashlib
 
 from hashlib import sha1
 from hashlib import md5
@@ -154,11 +155,13 @@ class Yak:
         print ("\n\t%s likes  |  Posted  %s  at  %s %s" % (self.likes, self.time, self.latitude, self.longitude))
     def return_yak(self):
         dict = {}
+        dict['message_id']=self.message_id
         dict['message']=self.message
         dict['likes']=self.likes
         dict['time']=self.time
         dict['latitude']=self.latitude
         dict['longitude']=self.longitude
+        dict['hash']=hashlib.sha224(str(self.longitude)+str(self.time)+str(self.longitude)).hexdigest()[:10]
         return dict;
 class Yakker:
     base_url = "https://yikyakapp.com/api/"
@@ -175,6 +178,7 @@ class Yakker:
         elif force_register:
             self.register_id_new(user_id)
 
+        print user_id
         self.id = user_id
 
         self.handle = None
@@ -217,7 +221,8 @@ class Yakker:
         #Calculate the signature
         h = hmac.new(key.encode(), msg.encode(), sha1)
         hash = base64.b64encode(h.digest())
-
+        print hash
+        print salt
         return hash, salt
         
     def post_sign_request(self, page, params):
@@ -235,7 +240,6 @@ class Yakker:
         #Calculate the signature
         h = hmac.new(key.encode(), msg.encode(), sha1)
         hash = base64.b64encode(h.digest())
-        
         return hash, salt
 
 
@@ -295,6 +299,7 @@ class Yakker:
         return self.get("contactUs", params)
 
     def upvote_yak(self, message_id):
+        print("upvoted "+message_id+" by "+self.id)
         params = {
             "userID": self.id,
             "messageID": message_id,
@@ -304,6 +309,8 @@ class Yakker:
         return self.get("likeMessage", params)
 
     def downvote_yak(self, message_id):
+        print("downvoted "+message_id+" by "+self.id)
+
         params = {
             "userID": self.id,
             "messageID": message_id,
